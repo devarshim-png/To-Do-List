@@ -1,0 +1,20 @@
+{
+  "name": "todo_list",
+  "version": "1.0.0",
+  "description": "node js",
+  "repository": {
+    "type": "git",
+    "url": "(https://github.com/devarshim-png/To-Do-List)"
+  },
+  "license": "ISC",
+  "author": "Devarshi",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ejs": "^7.0.2",
+    "express": "^5.3.0"
+  }
+}
