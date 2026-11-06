@@ -4,10 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New Task</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <%-include('navbar') %>
     <h1>Add Task Page</h1>
-   
+    <div class="container">
+        <form class="todo-form" action="" method="post">
+            <input class="input" type="task" placeholder="Enter New Task" name="task">
+            <br>
+            <br>
+            <textarea name="description" id="">
+
+            </textarea>
+            <br>
+            <br>
+            <button type="Submit Task">Add Task</button>
+        </form>
+    </div>
 </body>
 </html>
