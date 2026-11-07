@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include('head') %>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3efe7">
+  <title><%= title %> · Taskboard</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <%- include('navbar') %>
   <main class="wrap">
-    <%- include('flash') %>
+    <% if (notice) { %><p class="notice" role="status"><%= notice %></p><% } %>
     <div class="page-head">
       <div>
         <h1>Tasks</h1>
         <p class="lead"><%= todayLabel %></p>
       </div>
-      <a class="btn" href="/add">New task</a>
     </div>
 
     <section class="stats" aria-label="Summary">
@@ -36,12 +40,6 @@
           <a class="chip <%= filter.active ? 'active' : '' %>" href="<%= filter.href %>" <%= filter.active ? 'aria-current="true"' : '' %>><%= filter.label %></a>
         <% }) %>
       </div>
-      <form class="search" method="get" action="/">
-        <% if (status !== 'all') { %><input type="hidden" name="status" value="<%= status %>"><% } %>
-        <input type="search" name="q" value="<%= q %>" placeholder="Search tasks" aria-label="Search tasks">
-        <button type="submit">Search</button>
-        <% if (q) { %><a class="clear" href="<%= clearHref %>">Clear</a><% } %>
-      </form>
     </div>
     <p class="count">Showing <%= visibleCount %> <%= visibleCount === 1 ? 'task' : 'tasks' %></p>
 
@@ -63,11 +61,39 @@
       <h2 class="group-label"><%= group.label %></h2>
       <div class="tasks">
         <% group.tasks.forEach((task) => { %>
-          <%- include('task', { task, returnTo }) %>
+          <article class="task priority-<%= task.priority %> <%= task.status === 'done' ? 'is-done' : '' %> <%= task.overdue ? 'overdue' : '' %>">
+            <form method="post" action="/tasks/<%= task.id %>/toggle">
+              <input type="hidden" name="returnTo" value="<%= returnTo %>">
+              <button class="check <%= task.status === 'done' ? 'is-done' : '' %>" type="submit" aria-label="<%= task.status === 'done' ? 'Reopen ' + task.title : 'Mark done ' + task.title %>">
+                <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true">
+                  <path d="M4.5 10.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </form>
+            <div class="task-body">
+              <h3><%= task.title %></h3>
+              <% if (task.description) { %><p class="desc"><%= task.description %></p><% } %>
+              <p class="meta">
+                <span class="pill <%= task.priority %>"><%= task.priorityLabel %></span>
+                <span class="due <%= task.overdue ? 'late' : '' %>"><%= task.dueLabel %></span>
+              </p>
+            </div>
+            <div class="task-side">
+              <a href="/tasks/<%= task.id %>/edit?returnTo=<%= encodeURIComponent(returnTo) %>">Edit</a>
+              <form method="post" action="/tasks/<%= task.id %>/delete" onsubmit="return confirm('Remove this task?')">
+                <input type="hidden" name="returnTo" value="<%= returnTo %>">
+                <button class="text danger" type="submit">Delete</button>
+              </form>
+            </div>
+          </article>
         <% }) %>
       </div>
     <% }) %>
   </main>
-  <%- include('footer') %>
+  <footer class="foot">
+    <span>Express + EJS</span>
+    <span>Saved in data/tasks.json</span>
+    <a href="/api">JSON API</a>
+  </footer>
 </body>
 </html>

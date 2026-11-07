@@ -1,20 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include('head') %>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3efe7">
+  <title><%= title %> · Taskboard</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <%- include('navbar') %>
   <main class="wrap">
-    <%- include('flash') %>
+    <% if (notice) { %><p class="notice" role="status"><%= notice %></p><% } %>
     <div class="page-head">
       <div>
         <h1>Edit task</h1>
         <p class="lead">Change the details and save.</p>
       </div>
     </div>
-    <%- include('form', { action: '/tasks/' + task.id + '/edit', submitLabel: 'Save changes', showStatus: true, values, errors, returnTo }) %>
+    <form class="panel" method="post" action="/tasks/<%= task.id %>/edit" autocomplete="off">
+      <input type="hidden" name="returnTo" value="<%= returnTo %>">
+      <div class="field">
+        <label for="title">Title</label>
+        <input id="title" name="title" type="text" maxlength="120" autofocus value="<%= values.title %>" class="<%= errors.title ? 'is-invalid' : '' %>" placeholder="What needs doing?">
+        <% if (errors.title) { %><p class="err"><%= errors.title %></p><% } %>
+      </div>
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" maxlength="1000" rows="4" placeholder="Optional details" class="<%= errors.description ? 'is-invalid' : '' %>"><%= values.description %></textarea>
+        <% if (errors.description) { %><p class="err"><%= errors.description %></p><% } %>
+      </div>
+      <div class="pair">
+        <div class="field">
+          <label for="priority">Priority</label>
+          <select id="priority" name="priority" class="<%= errors.priority ? 'is-invalid' : '' %>">
+            <option value="low" <%= values.priority === 'low' ? 'selected' : '' %>>Low</option>
+            <option value="medium" <%= values.priority === 'medium' ? 'selected' : '' %>>Medium</option>
+            <option value="high" <%= values.priority === 'high' ? 'selected' : '' %>>High</option>
+          </select>
+          <% if (errors.priority) { %><p class="err"><%= errors.priority %></p><% } %>
+        </div>
+        <div class="field">
+          <label for="dueDate">Due date</label>
+          <input id="dueDate" name="dueDate" type="date" value="<%= values.dueDate %>" class="<%= errors.dueDate ? 'is-invalid' : '' %>">
+          <% if (errors.dueDate) { %><p class="err"><%= errors.dueDate %></p><% } %>
+        </div>
+      </div>
+      <div class="field">
+        <label for="status">Status</label>
+        <select id="status" name="status">
+          <option value="open" <%= values.status === 'open' ? 'selected' : '' %>>Open</option>
+          <option value="done" <%= values.status === 'done' ? 'selected' : '' %>>Done</option>
+        </select>
+        <% if (errors.status) { %><p class="err"><%= errors.status %></p><% } %>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit">Save changes</button>
+        <a class="btn secondary" href="<%= returnTo %>">Cancel</a>
+      </div>
+    </form>
   </main>
-  <%- include('footer') %>
+  <footer class="foot">
+    <span>Express + EJS</span>
+    <span>Saved in data/tasks.json</span>
+    <a href="/api">JSON API</a>
+  </footer>
 </body>
 </html>
