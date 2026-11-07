@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Task</title>
-    <link rel="stylesheet" href="/style.css">
+  <%- include('head') %>
 </head>
 <body>
-    <%-include('navbar') %>
-    <h1>Update Task Page</h1>
-   
+  <%- include('navbar') %>
+  <main class="wrap">
+    <%- include('flash') %>
+    <div class="page-head">
+      <div>
+        <h1>Edit task</h1>
+        <p class="lead">Change the details and save.</p>
+      </div>
+    </div>
+    <%- include('form', { action: '/tasks/' + task.id + '/edit', submitLabel: 'Save changes', showStatus: true, values, errors, returnTo }) %>
+  </main>
+  <%- include('footer') %>
 </body>
 </html>

@@ -1,26 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Task</title>
-    <link rel="stylesheet" href="/style.css">
+  <%- include('head') %>
 </head>
 <body>
-    <%-include('navbar') %>
-    <h1>Add Task Page</h1>
-    <div class="container">
-        <form class="todo-form" action="" method="post">
-            <input class="input" type="task" placeholder="Enter New Task" name="task">
-            <br>
-            <br>
-            <textarea name="description" id="">
-
-            </textarea>
-            <br>
-            <br>
-            <button type="Submit Task">Add Task</button>
-        </form>
+  <%- include('navbar') %>
+  <main class="wrap">
+    <%- include('flash') %>
+    <div class="page-head">
+      <div>
+        <h1>New task</h1>
+        <p class="lead">Give it a title, a priority, and an optional due date.</p>
+      </div>
     </div>
+    <%- include('form', { action: '/add', submitLabel: 'Add task', showStatus: false, values, errors, returnTo }) %>
+  </main>
+  <%- include('footer') %>
 </body>
 </html>

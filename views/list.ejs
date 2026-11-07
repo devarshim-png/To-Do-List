@@ -1,14 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task List</title>
-    <link rel="stylesheet" href="/style.css">
+  <%- include('head') %>
 </head>
 <body>
-    <%-include('navbar') %>
-    <h1>Task List Page</h1>
-    
+  <%- include('navbar') %>
+  <main class="wrap">
+    <%- include('flash') %>
+    <div class="page-head">
+      <div>
+        <h1>Tasks</h1>
+        <p class="lead"><%= todayLabel %></p>
+      </div>
+      <a class="btn" href="/add">New task</a>
+    </div>
+
+    <section class="stats" aria-label="Summary">
+      <article class="stat">
+        <span>Open</span>
+        <strong><%= stats.open %></strong>
+      </article>
+      <article class="stat">
+        <span>Done</span>
+        <strong><%= stats.done %></strong>
+      </article>
+      <article class="stat <%= stats.overdue ? 'warn' : '' %>">
+        <span>Overdue</span>
+        <strong><%= stats.overdue %></strong>
+      </article>
+    </section>
+
+    <div class="toolbar">
+      <div class="chips" role="navigation" aria-label="Filter tasks">
+        <% filters.forEach((filter) => { %>
+          <a class="chip <%= filter.active ? 'active' : '' %>" href="<%= filter.href %>" <%= filter.active ? 'aria-current="true"' : '' %>><%= filter.label %></a>
+        <% }) %>
+      </div>
+      <form class="search" method="get" action="/">
+        <% if (status !== 'all') { %><input type="hidden" name="status" value="<%= status %>"><% } %>
+        <input type="search" name="q" value="<%= q %>" placeholder="Search tasks" aria-label="Search tasks">
+        <button type="submit">Search</button>
+        <% if (q) { %><a class="clear" href="<%= clearHref %>">Clear</a><% } %>
+      </form>
+    </div>
+    <p class="count">Showing <%= visibleCount %> <%= visibleCount === 1 ? 'task' : 'tasks' %></p>
+
+    <% if (!groups.length) { %>
+      <div class="empty">
+        <% if (stats.total === 0) { %>
+          <h2>The board is clear</h2>
+          <p>Add the first task and it will show up here.</p>
+          <a class="btn" href="/add">Add a task</a>
+        <% } else { %>
+          <h2>No tasks match</h2>
+          <p>Try another filter<% if (q) { %> or clear the search<% } %>.</p>
+          <a class="btn secondary" href="/">Show all</a>
+        <% } %>
+      </div>
+    <% } %>
+
+    <% groups.forEach((group) => { %>
+      <h2 class="group-label"><%= group.label %></h2>
+      <div class="tasks">
+        <% group.tasks.forEach((task) => { %>
+          <%- include('task', { task, returnTo }) %>
+        <% }) %>
+      </div>
+    <% }) %>
+  </main>
+  <%- include('footer') %>
 </body>
 </html>

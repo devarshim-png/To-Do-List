@@ -1,0 +1,48 @@
+<form class="panel" method="post" action="<%= action %>" autocomplete="off">
+  <input type="hidden" name="returnTo" value="<%= returnTo %>">
+
+  <div class="field">
+    <label for="title">Title</label>
+    <input id="title" name="title" type="text" maxlength="120" autofocus value="<%= values.title %>" class="<%= errors.title ? 'is-invalid' : '' %>" placeholder="What needs doing?">
+    <% if (errors.title) { %><p class="err"><%= errors.title %></p><% } %>
+  </div>
+
+  <div class="field">
+    <label for="description">Description</label>
+    <textarea id="description" name="description" maxlength="1000" rows="4" placeholder="Optional details" class="<%= errors.description ? 'is-invalid' : '' %>"><%= values.description %></textarea>
+    <% if (errors.description) { %><p class="err"><%= errors.description %></p><% } %>
+  </div>
+
+  <div class="pair">
+    <div class="field">
+      <label for="priority">Priority</label>
+      <select id="priority" name="priority" class="<%= errors.priority ? 'is-invalid' : '' %>">
+        <% [['low', 'Low'], ['medium', 'Medium'], ['high', 'High']].forEach(([value, label]) => { %>
+          <option value="<%= value %>" <%= values.priority === value ? 'selected' : '' %>><%= label %></option>
+        <% }) %>
+      </select>
+      <% if (errors.priority) { %><p class="err"><%= errors.priority %></p><% } %>
+    </div>
+    <div class="field">
+      <label for="dueDate">Due date</label>
+      <input id="dueDate" name="dueDate" type="date" value="<%= values.dueDate %>" class="<%= errors.dueDate ? 'is-invalid' : '' %>">
+      <% if (errors.dueDate) { %><p class="err"><%= errors.dueDate %></p><% } %>
+    </div>
+  </div>
+
+  <% if (showStatus) { %>
+    <div class="field">
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        <option value="open" <%= values.status === 'open' ? 'selected' : '' %>>Open</option>
+        <option value="done" <%= values.status === 'done' ? 'selected' : '' %>>Done</option>
+      </select>
+      <% if (errors.status) { %><p class="err"><%= errors.status %></p><% } %>
+    </div>
+  <% } %>
+
+  <div class="actions">
+    <button class="btn" type="submit"><%= submitLabel %></button>
+    <a class="btn secondary" href="<%= returnTo %>">Cancel</a>
+  </div>
+</form>
